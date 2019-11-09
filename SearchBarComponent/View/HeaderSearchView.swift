@@ -8,11 +8,19 @@
 
 import UIKit
 
+protocol HeaderSearchViewDelegate {
+    
+    func searchButtonWasTappedWith(query: String)
+    
+}
+
 class HeaderSearchView: UIView {
     
     @IBOutlet weak var clearSearchQueryButton: UIButton!
     @IBOutlet weak var navigationChainLabel: UILabel!
     @IBOutlet var contentView: UIView!
+    
+    public var delegate: HeaderSearchViewDelegate?
     
     private var searchButton: UIButton!
     private var auxiliaryLabel: UILabel!
@@ -22,7 +30,7 @@ class HeaderSearchView: UIView {
     @IBOutlet var searchQueryTextFieldRightConstraint: NSLayoutConstraint!
     private weak var heightFromSuperviewConstraint: NSLayoutConstraint!
     
-    lazy private var anim: UIViewPropertyAnimator = UIViewPropertyAnimator(
+    lazy private var animator: UIViewPropertyAnimator = UIViewPropertyAnimator(
         duration: 0.25,
         timingParameters: UISpringTimingParameters()
     )
@@ -32,7 +40,9 @@ class HeaderSearchView: UIView {
             self.searchQueryTextField.layer.borderWidth = 1.0
             self.searchQueryTextField.layer.borderColor = UIColor.blue.cgColor
             self.searchQueryTextField.layer.cornerRadius = 8
+            self.searchQueryTextField.delegate = self
             self.searchQueryTextField.addTarget(self, action: #selector(expand), for: .touchDown)
+            addSearchButtonToTextField()
         }
     }
     
@@ -51,7 +61,7 @@ class HeaderSearchView: UIView {
         print("layoutSubviews")
         
         if heightFromSuperviewConstraint == nil {
-            self.constraints.forEach { (constraint) in
+            self.constraints.forEach { [unowned self] (constraint) in
                 if constraint.firstAnchor == heightAnchor {
                     self.heightFromSuperviewConstraint = constraint
                 }
@@ -64,7 +74,7 @@ class HeaderSearchView: UIView {
     }
     
     @IBAction func clearSearchQueryButtonWasTapped(_ sender: UIButton) {
-        searchQueryTextField.text?.removeAll()
+        navigationChainLabel.text = "Поиск по всему каталогу"
         searchQueryTextField.resignFirstResponder()
     }
     
@@ -75,10 +85,6 @@ extension HeaderSearchView {
     
     private func setUp() {
         setUpViewFromNib()
-    
-        searchButton = UIButton(type: .roundedRect)
-        
-        addSearchButtonToTextField()
     }
     
     private func setUpViewFromNib() {
@@ -102,6 +108,7 @@ extension HeaderSearchView {
     }
     
     private func addSearchButtonToTextField() {
+        searchButton = UIButton(type: .roundedRect)
         searchQueryTextField.leftViewMode = UITextField.ViewMode.always
         let searchImage = UIImage(named: "search_icon")
         searchButton.setImage(searchImage, for: .normal)
@@ -114,6 +121,9 @@ extension HeaderSearchView {
 extension HeaderSearchView {
     
     @objc func didTap(_ sender: UIButton) {
+        if animator.isRunning {
+            return
+        }
         expand()
         searchQueryTextField.becomeFirstResponder()
     }
@@ -123,12 +133,10 @@ extension HeaderSearchView {
 //MARK: - UITextFieldDelegate
 extension HeaderSearchView : UITextFieldDelegate {
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        expand()
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        expand()
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        delegate?.searchButtonWasTappedWith(query: textField.text ?? "")
+        return true
     }
     
 }
@@ -137,7 +145,7 @@ extension HeaderSearchView : UITextFieldDelegate {
 extension HeaderSearchView {
     
     @objc func expand() {
-        anim.addAnimations {
+        animator.addAnimations { [unowned self] in
             self.heightFromSuperviewConstraint?.constant = 82
             self.navigationChainLabel.font = self.navigationChainLabel.font.withSize(13)
             self.footerStackViewTopConstraint.constant = 12
@@ -149,14 +157,14 @@ extension HeaderSearchView {
             self.layoutIfNeeded()
         }
         
-        anim.startAnimation()
+        animator.startAnimation()
     }
     
     func collapse() {
         searchQueryTextField.resignFirstResponder()
-        auxiliaryLabel.text = searchQueryTextField.text
+        auxiliaryLabel?.text = searchQueryTextField.text
         
-        anim.addAnimations {
+        animator.addAnimations { [unowned self] in
             self.heightFromSuperviewConstraint?.constant = 60
             self.navigationChainLabel.font = self.navigationChainLabel.font.withSize(10)
             self.footerStackViewTopConstraint.constant = 2
@@ -164,11 +172,11 @@ extension HeaderSearchView {
             self.searchQueryTextFieldRightConstraint.constant = self.frame.width - 32
             self.queryTextFieldHeightConstraint.constant = 20
             self.searchQueryTextField.textColor = .white
-            self.auxiliaryLabel.alpha = 1
+            self.auxiliaryLabel?.alpha = 1
             self.layoutIfNeeded()
         }
         
-        anim.startAnimation()
+        animator.startAnimation()
     }
     
 }

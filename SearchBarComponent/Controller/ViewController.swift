@@ -11,9 +11,11 @@ import UIKit
 class ViewController: UIViewController {
     //MARK: - Private Properties
     private let tableViewIdentifier = "cell"
-    private let headerSearchView = HeaderSearchView()
+    private var headerSearchView: HeaderSearchView!
     private var tableView: UITableView!
     private var tableViewLastContentOffsetY: CGFloat = 0
+    
+    lazy private var apiProvider: APIProvider = AlamofireAPIProvider()
     
     //MARK: - Lifecycle
     override func viewDidLoad() {
@@ -50,6 +52,8 @@ extension ViewController {
     }
     
     fileprivate func setUpHeaderSearchView() {
+        headerSearchView = HeaderSearchView()
+        headerSearchView.delegate = self
         headerSearchView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerSearchView)
         
@@ -58,6 +62,19 @@ extension ViewController {
         headerSearchView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         headerSearchView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         headerSearchView.heightAnchor.constraint(equalToConstant: 82).isActive = true
+    }
+    
+}
+
+//MARK: - Alert
+extension ViewController {
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okButton = UIAlertAction(title: "Ок", style: .cancel, handler: nil)
+        alert.addAction(okButton)
+        
+        present(alert, animated: true, completion: nil)
     }
     
 }
@@ -73,6 +90,27 @@ extension ViewController : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableViewIdentifier, for: indexPath)
         cell.textLabel?.text = "Item #\(indexPath.row)"
         return cell
+    }
+    
+}
+
+extension ViewController : HeaderSearchViewDelegate {
+    
+    func searchButtonWasTappedWith(query: String) {
+        apiProvider.searchGoods(query: query) { [weak self] (results, error) in
+            DispatchQueue.main.async {
+                if error != nil {
+                    self?.showAlert(title: "Ошибка", message: (error as NSError?)?.userInfo["description"] as? String ?? "")
+                    return
+                }
+                guard let results = results else {
+                    self?.showAlert(title: "Ошибка", message: (error as NSError?)?.userInfo["description"] as? String ?? "")
+                    return
+                }
+                
+                self?.showAlert(title: "Ответ с сервера", message: "Количество возвращенных товаров: \(results.count)")                
+            }
+        }
     }
     
 }
