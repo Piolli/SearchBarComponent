@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A8A222BC23769AD800DCB60A /* HeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A222BB23769AD800DCB60A /* HeaderSearchView.swift */; };
+		A8A222BE23769B2700DCB60A /* HeaderSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A8A222BD23769B2700DCB60A /* HeaderSearchView.xib */; };
 		A8C4E6FB2372FA4100F7D4BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C4E6FA2372FA4100F7D4BF /* AppDelegate.swift */; };
 		A8C4E6FD2372FA4100F7D4BF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C4E6FC2372FA4100F7D4BF /* SceneDelegate.swift */; };
 		A8C4E6FF2372FA4100F7D4BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C4E6FE2372FA4100F7D4BF /* ViewController.swift */; };
@@ -27,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A8A222BB23769AD800DCB60A /* HeaderSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSearchView.swift; sourceTree = "<group>"; };
+		A8A222BD23769B2700DCB60A /* HeaderSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderSearchView.xib; sourceTree = "<group>"; };
 		A8C4E6F72372FA4100F7D4BF /* SearchBarComponent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SearchBarComponent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8C4E6FA2372FA4100F7D4BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8C4E6FC2372FA4100F7D4BF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 				A8C4E7032372FA4300F7D4BF /* Assets.xcassets */,
 				A8C4E7052372FA4300F7D4BF /* LaunchScreen.storyboard */,
 				A8C4E7082372FA4300F7D4BF /* Info.plist */,
+				A8A222BB23769AD800DCB60A /* HeaderSearchView.swift */,
+				A8A222BD23769B2700DCB60A /* HeaderSearchView.xib */,
 			);
 			path = SearchBarComponent;
 			sourceTree = "<group>";
@@ -183,6 +189,7 @@
 				A8C4E7072372FA4300F7D4BF /* LaunchScreen.storyboard in Resources */,
 				A8C4E7042372FA4300F7D4BF /* Assets.xcassets in Resources */,
 				A8C4E7022372FA4100F7D4BF /* Main.storyboard in Resources */,
+				A8A222BE23769B2700DCB60A /* HeaderSearchView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +210,7 @@
 				A8C4E6FF2372FA4100F7D4BF /* ViewController.swift in Sources */,
 				A8C4E6FB2372FA4100F7D4BF /* AppDelegate.swift in Sources */,
 				A8C4E6FD2372FA4100F7D4BF /* SceneDelegate.swift in Sources */,
+				A8A222BC23769AD800DCB60A /* HeaderSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
